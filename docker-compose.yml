@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  # Servidor de Banco de Dados Relacional
+  db:
+    image: mysql:8.0
+    container_name: leilao-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME:-leilao_db}
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    volumes:
+      - leilao-db-data:/var/lib/mysql
+    networks:
+      - leilao-network
+
+  # Servidor de Cache e Controle de Concorrência Rápida (Tempo Real)
+  redis:
+    image: redis:7-alpine
+    container_name: leilao-redis
+    restart: always
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - leilao-redis-data:/data
+    networks:
+      - leilao-network
+
+volumes:
+  leilao-db-data:
+  leilao-redis-data:
+
+networks:
+  leilao-network:
