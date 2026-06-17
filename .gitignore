@@ -19,7 +19,7 @@ target/
 *.iml
 *.ipr
 .env
-.Modelagem/Mod.mwb
+Modelagem
 
 ### NetBeans ###
 /nbproject/private/
