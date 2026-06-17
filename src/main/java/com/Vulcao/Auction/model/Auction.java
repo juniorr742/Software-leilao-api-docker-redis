@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,9 +30,9 @@ public class Auction {
     @Column(nullable = false)
     private BigDecimal actualPrice;
 
-    private LocalDate startAction;
+    private LocalDateTime startAction;
 
-    private LocalDate finishAction;
+    private LocalDateTime finishAction;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

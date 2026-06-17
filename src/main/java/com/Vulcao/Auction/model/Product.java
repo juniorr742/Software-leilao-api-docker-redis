@@ -20,6 +20,9 @@ public class Product {
     private UUID idProduct;
 
     @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
     private String description;
 
     @Column(nullable = false)
