@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record BidRequest(UUID idUser,
+                         UUID idAuction,
                          BigDecimal value,
                          LocalDateTime timestamp) {
 }
