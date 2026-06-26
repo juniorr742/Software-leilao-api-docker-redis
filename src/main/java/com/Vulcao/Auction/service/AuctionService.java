@@ -10,6 +10,7 @@ import com.Vulcao.Auction.model.Auction;
 import com.Vulcao.Auction.model.Bid;
 import com.Vulcao.Auction.model.Product;
 import com.Vulcao.Auction.model.User;
+import com.Vulcao.Auction.model.enums.AuctionStatus;
 import com.Vulcao.Auction.repositorys.IAuctionRepository;
 import com.Vulcao.Auction.repositorys.IBidRepository;
 import com.Vulcao.Auction.repositorys.IProductRepository;
@@ -93,7 +94,11 @@ public class AuctionService {
         return toResponse(auction);
     }
 
-
+    public AuctionResponse cancelAuction(UUID idAuction){
+        Auction auction = auctionRepository.findById(idAuction).orElseThrow(() -> new EntityNotFoundException("Leilão não encontrado"));
+        auction.setStatus(AuctionStatus.CANCELADO);
+        return toResponse(auctionRepository.save(auction));
+    }
 
     public AuctionResponse toResponse(Auction auction){
 
