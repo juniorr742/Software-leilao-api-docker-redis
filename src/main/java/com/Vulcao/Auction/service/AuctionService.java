@@ -103,7 +103,7 @@ public class AuctionService {
     public AuctionResponse toResponse(Auction auction){
 
         ProductResponse productResponse = new ProductResponse(auction.getProduct().getIdProduct(),
-                auction.getProduct().getOwner(),
+                auction.getProduct().getOwner().getIdUsuario(),
                 auction.getProduct().getName(),
                 auction.getProduct().getPrice());
 
