@@ -5,8 +5,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record BidResponse(UUID idBid,
-                          AuctionResponse auction,
-                          UserResponse owner,
+                          UUID auction,
+                          UUID idOwner,
                           BigDecimal value,
                           LocalDateTime timestamp) {
 }
