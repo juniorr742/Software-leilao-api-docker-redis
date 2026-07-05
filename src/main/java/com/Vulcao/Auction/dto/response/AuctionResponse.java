@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public record AuctionResponse(
         UUID id,
-        ProductResponse product,
+        UUID idProduct,
         BigDecimal price,
         LocalDateTime startAction,
         LocalDateTime finishAction,
