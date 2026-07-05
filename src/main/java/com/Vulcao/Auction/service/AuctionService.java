@@ -51,6 +51,26 @@ public class AuctionService {
                 totalPaginas(auctionPage.getTotalPages()).paginaAtual(auctionPage.getNumber()).tamanhoPagina(auctionPage.getSize()).build();
     }
 
+    public AuctionResponse auctionForProduct(UUID idProduct){
+        Auction auction = auctionRepository.findByProduct_IdProduct(idProduct).orElseThrow(() -> new EntityNotFoundException("Leilão não encontrado"));
+
+        return toResponse(auction);
+    }
+
+    public List<AuctionResponse> listAuctionForUser(UUID idUser){
+        List<AuctionResponse> list = auctionRepository.findByProduct_Owner_IdUsuario(idUser).stream().map(resp ->
+                new AuctionResponse(
+                        resp.getIdAuction(),
+                        resp.getProduct().getIdProduct(),
+                        resp.getActualPrice(),
+                        resp.getStartAction(),
+                        resp.getFinishAction(),
+                        resp.getStatus()
+                )).toList();
+
+        return list;
+    }
+
     public AuctionResponse createAuction(AuctionRequest request){
         Product product = productRepository.findById(request.idProduct()).orElseThrow(() -> new EntityNotFoundException("Produto não encontrado"));
 
@@ -102,13 +122,8 @@ public class AuctionService {
 
     public AuctionResponse toResponse(Auction auction){
 
-        ProductResponse productResponse = new ProductResponse(auction.getProduct().getIdProduct(),
-                auction.getProduct().getOwner().getIdUsuario(),
-                auction.getProduct().getName(),
-                auction.getProduct().getPrice());
-
         AuctionResponse auctionResponse = new AuctionResponse(auction.getIdAuction(),
-                productResponse,
+                auction.getProduct().getIdProduct(),
                 auction.getActualPrice(),
                 auction.getStartAction(),
                 auction.getFinishAction(),
