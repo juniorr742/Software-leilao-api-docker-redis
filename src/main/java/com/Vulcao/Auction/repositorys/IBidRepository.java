@@ -15,7 +15,7 @@ import java.util.UUID;
 public interface IBidRepository extends JpaRepository<Bid, UUID> {
 
     Page<Bid> findByUser_IdUsuario(Pageable pageable, UUID idUsuario);
-    List<Bid> findByAuction_IdAuction(UUID idAuction);
+    Page<Bid> findByAuction_IdAuction(Pageable pageable, UUID idAuction);
 
     Optional<Bid> findFirstByAuction_IdAuctionAndUser_IdUsuarioAndValue(UUID idAuction, UUID idUsuario, BigDecimal value);
 
