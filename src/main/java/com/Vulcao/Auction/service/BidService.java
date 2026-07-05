@@ -42,9 +42,17 @@ public class BidService {
     @Autowired
     RedisScript<Long> validateBidScript;
 
-    public PageResponse<Bid> auctionPages(int pages){
+    public PageResponse<Bid> listBids(int pages){
         Pageable pageable = PageRequest.of(pages, 100);
         Page<Bid> bidPage = bidRepository.findAll(pageable);
+
+        return PageResponse.<Bid>builder().conteudo(bidPage.getContent()).totalElementos(bidPage.getTotalElements()).
+                totalPaginas(bidPage.getTotalPages()).paginaAtual(bidPage.getNumber()).tamanhoPagina(bidPage.getSize()).build();
+    }
+
+    public PageResponse<Bid> listBidsUsers(int pages, UUID idUser){
+        Pageable pageable = PageRequest.of(pages, 100);
+        Page<Bid> bidPage = bidRepository.findByUser_IdUsuario(pageable, idUser);
 
         return PageResponse.<Bid>builder().conteudo(bidPage.getContent()).totalElementos(bidPage.getTotalElements()).
                 totalPaginas(bidPage.getTotalPages()).paginaAtual(bidPage.getNumber()).tamanhoPagina(bidPage.getSize()).build();
