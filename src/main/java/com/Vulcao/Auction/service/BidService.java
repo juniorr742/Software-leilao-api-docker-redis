@@ -58,6 +58,14 @@ public class BidService {
                 totalPaginas(bidPage.getTotalPages()).paginaAtual(bidPage.getNumber()).tamanhoPagina(bidPage.getSize()).build();
     }
 
+    public PageResponse<Bid> listBidsAuction(int pages, UUID idAuction){
+        Pageable pageable = PageRequest.of(pages, 100);
+        Page<Bid> bidPage = bidRepository.findByAuction_IdAuction(pageable, idAuction);
+
+        return PageResponse.<Bid>builder().conteudo(bidPage.getContent()).totalElementos(bidPage.getTotalElements()).
+                totalPaginas(bidPage.getTotalPages()).paginaAtual(bidPage.getNumber()).tamanhoPagina(bidPage.getSize()).build();
+    }
+
     public BidResponse createBid(BidRequest request){
         String auctionKey = "auction:" + request.idAuction() + ":highest";
 
