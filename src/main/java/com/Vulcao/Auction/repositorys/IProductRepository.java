@@ -10,6 +10,6 @@ import java.util.UUID;
 
 public interface IProductRepository extends JpaRepository<Product, UUID> {
 
-    @Query("SELECT p FROM Pruduct p JOIN Auction a on a.product = p WHERE a.idAuction = :idAuction")
+    @Query("SELECT p FROM Product p JOIN Auction a on a.product = p WHERE a.idAuction = :idAuction")
     Optional<Product> findByAuctionId(@Param("idAuction") UUID idAuction);
 }
