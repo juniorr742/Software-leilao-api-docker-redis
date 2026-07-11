@@ -58,10 +58,11 @@ public class ProductService {
     }
 
     public boolean deleteProduct(UUID idProduct){
-        boolean check = userRepository.existsById(idProduct);
+        Product product = productRepository.findById(idProduct).orElseThrow(() -> new EntityNotFoundException("Produto não encontrado"));
+        User user = userRepository.findById(product.getOwner().getIdUsuario()).orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
 
-        if (!check){
-            throw new EntityNotFoundException("Produto não encontrado");
+        if (product.getOwner().getIdUsuario() == user.getIdUsuario()){
+            throw new RuntimeException("Só é permitido deletar um produto seu");
         }
 
         userRepository.deleteById(idProduct);
