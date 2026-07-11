@@ -23,6 +23,10 @@ public class UserService {
     IUserRepository userRepository;
 
     public UserResponse createUser(UserRequest request){
+        if (userRepository.existsByEmail(request.email())){
+            throw new RuntimeException("Email já existente");
+        }
+
         User user = User.builder().name(request.name()).email(request.email()).password(request.password())
                 .saldo(request.saldo()).status(UserStatus.USER).products(new ArrayList<>()).bids(new ArrayList<>()).build();
         return toResponse(user);
@@ -47,7 +51,11 @@ public class UserService {
         User user = userRepository.findById(idUser).orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
 
         user.setName(request.name());
-        user.set
+        if (userRepository.existsByEmail(request.email())){
+            throw new RuntimeException("Email já existente");
+        }else {
+            user.setEmail(request.email());
+        }
     }
 
     private UserResponse toResponse(User user){
