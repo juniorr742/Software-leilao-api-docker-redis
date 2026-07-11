@@ -29,7 +29,25 @@ public class UserService {
     }
 
     public UserResponse searchByBids(UUID idBid){
-        User user = userRepository.findByBids_IdBid(idBid).orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"))
+        User user = userRepository.findByBids_IdBid(idBid).orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+        return toResponse(user);
+    }
+
+    public UserResponse searchByProducts(UUID idProduct){
+        User user = userRepository.findByProducts_IdProduct(idProduct).orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+        return toResponse(user);
+    }
+
+    public UserResponse searchByAuction(UUID idAuction){
+        User user = userRepository.findByAuctionId(idAuction).orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+        return toResponse(user);
+    }
+
+    public UserResponse updateUser(UUID idUser, UserRequest request){
+        User user = userRepository.findById(idUser).orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+
+        user.setName(request.name());
+        user.set
     }
 
     private UserResponse toResponse(User user){
