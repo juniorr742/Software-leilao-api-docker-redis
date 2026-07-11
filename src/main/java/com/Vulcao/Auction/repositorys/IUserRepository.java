@@ -17,4 +17,6 @@ public interface IUserRepository extends JpaRepository<User, UUID> {
 
     @Query("SELECT u FROM User u JOIN u.products p JOIN Auction a ON a.product = p WHERE a.idAuction = :idAuction")
     Optional<User> findByAuctionId(@Param("idAuction") UUID idAuction);
+
+    boolean existsByEmail(String email);
 }
