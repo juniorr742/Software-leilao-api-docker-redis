@@ -39,6 +39,7 @@ public class ProductService {
                 .owner(user).build();
 
             productRepository.save(product);
+            user.getProducts().add(product);
 
         return toResponse(product);
     }
