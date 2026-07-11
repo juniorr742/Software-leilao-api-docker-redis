@@ -58,6 +58,7 @@ public class BidQueueConsumer {
                             .value(value).build();
 
                     bidRepository.save(bid);
+                    user.getBids().add(bid);
                 }
             } catch (Exception e){
                throw new RuntimeException("Erro ao processar lance da fila: " + e.getMessage());
