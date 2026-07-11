@@ -1,5 +1,6 @@
 package com.Vulcao.Auction.model;
 
+import com.Vulcao.Auction.model.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,6 +31,8 @@ public class User {
     private String password;
 
     private BigDecimal saldo;
+
+    private UserStatus status;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Product> products;
