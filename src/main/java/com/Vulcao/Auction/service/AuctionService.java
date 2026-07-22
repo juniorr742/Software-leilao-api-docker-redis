@@ -20,11 +20,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -36,6 +39,9 @@ public class AuctionService {
 
     @Autowired
     IProductRepository productRepository;
+
+    @Autowired
+    RedisTemplate redisTemplate;
 
     @Autowired
     IBidRepository bidRepository;
@@ -86,18 +92,33 @@ public class AuctionService {
     }
 
     @Transactional
-    public void createBid(BidRequest request){
-        Auction auction = auctionRepository.findById(request.idAuction()).orElseThrow(() -> new EntityNotFoundException("Leilão não encontrado"));
-        User user = userRepository.findById(request.idUser()).orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
-        Bid bid = Bid.builder()
-                .auction(auction)
-                .user(user)
-                .value(request.value())
-                .timestamp(request.timestamp())
-                .build();
+    public void finishAuctions(List<Auction> leiloesExpirados){
+        for (Auction fin: leiloesExpirados){
+            String redisKey = "auction:"+fin.getIdAuction()+":highest";
+            Map<Object, Object> highest = redisTemplate.opsForHash().entries(redisKey);
 
-        auction.getBids().add(bid);
-        bidRepository.save(bid);
+            if (highest.isEmpty()) {
+                fin.setStatus(AuctionStatus.FINALIZADO);
+                continue;
+            }
+
+            Map.Entry<Object, Object> entry = highest.entrySet().iterator().next();
+            UUID userId = UUID.fromString(entry.getKey().toString());
+            BigDecimal valorLance = new BigDecimal(entry.getValue().toString());
+
+            User winner = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+
+            if (winner != null) {
+                if (winner.getSaldo().compareTo(valorLance) < 0){
+                    throw new RuntimeException("Saldo insuficiente");
+                }
+
+                winner.setSaldo(winner.getSaldo().subtract(valorLance));
+                fin.setWinner(winner);
+                fin.setStatus(AuctionStatus.FINALIZADO);
+                redisTemplate.delete(redisKey);
+            }
+        }
     }
 
     public AuctionResponse updateAucition(UUID idAuction, AuctionRequest request){
