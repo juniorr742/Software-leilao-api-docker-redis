@@ -4,12 +4,12 @@ import com.Vulcao.Auction.dto.request.UserRequest;
 import com.Vulcao.Auction.dto.response.BidResponse;
 import com.Vulcao.Auction.dto.response.ProductResponse;
 import com.Vulcao.Auction.dto.response.UserResponse;
-import com.Vulcao.Auction.model.Product;
 import com.Vulcao.Auction.model.User;
 import com.Vulcao.Auction.model.enums.UserStatus;
 import com.Vulcao.Auction.repositorys.IUserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,12 +22,15 @@ public class UserService {
     @Autowired
     IUserRepository userRepository;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     public UserResponse createUser(UserRequest request){
         if (userRepository.existsByEmail(request.email())){
             throw new RuntimeException("Email já existente");
         }
 
-        User user = User.builder().name(request.name()).email(request.email()).password(request.password())
+        User user = User.builder().name(request.name()).email(request.email()).password(passwordEncoder.encode(request.password()))
                 .saldo(request.saldo()).status(UserStatus.USER).products(new ArrayList<>()).bids(new ArrayList<>()).build();
         return toResponse(user);
     }
@@ -56,6 +59,9 @@ public class UserService {
         }else {
             user.setEmail(request.email());
         }
+        user.setPassword(passwordEncoder.encode(request.password()));
+
+        return toResponse(user);
     }
 
     private UserResponse toResponse(User user){
