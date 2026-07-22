@@ -35,6 +35,10 @@ public class Auction {
 
     private LocalDateTime finishAction;
 
+    @OneToOne
+    @JoinColumn(name = "winner_id_usuario")
+    private User winner;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private AuctionStatus status;
