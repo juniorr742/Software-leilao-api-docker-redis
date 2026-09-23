@@ -121,7 +121,7 @@ public class AuctionService {
         }
     }
 
-    public AuctionResponse updateAucition(UUID idAuction, AuctionRequest request){
+    public AuctionResponse updateAuction(UUID idAuction, AuctionRequest request){
         Auction auction = auctionRepository.findById(idAuction).orElseThrow(() -> new EntityNotFoundException("Leilão não encontrado"));
         Product product = productRepository.findById(request.idProduct()).orElseThrow(() -> new EntityNotFoundException("produto não encontrado"));
 
