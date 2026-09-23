@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # Servidor de Cache e Controle de Concorrência Rápida (Tempo Real)
+
   redis:
     image: redis:7-alpine
     container_name: leilao-redis
